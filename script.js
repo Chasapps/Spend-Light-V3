@@ -46,6 +46,8 @@ function parseAmount(s) {
 }
 
 function loadCsvText(csvText) {
+  setStatus ("trying")
+
   const rows = Papa.parse(csvText.trim(), { skipEmptyLines: true }).data;
   const startIdx = rows.length && isNaN(parseAmount(rows[0][COL.DEBIT])) ? 1 : 0;
   const txns = [];
@@ -59,7 +61,9 @@ function loadCsvText(csvText) {
     txns.push({ date: effectiveDate, amount: debit, description: longDesc });
   }
   CURRENT_TXNS = txns; saveTxnsToLocalStorage();
-  try { updateMonthBanner(); } catch {}
+  try { updateMonthBanner(); } catch {
+    setStatus( "bugger")
+  }
   rebuildMonthDropdown();
   applyRulesAndRender();
   return txns;
